@@ -14,11 +14,14 @@ import java.io.Serializable;
 @XmlRootElement(name="userachievement")
 public class UserAchievement implements Serializable {
 
+
+	//Код
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY )
 	@XmlElement
 	private Long id;
 
+	// Достижение
 	private String achievement;
 
 	public UserAchievement () {

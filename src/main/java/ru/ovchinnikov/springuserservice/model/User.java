@@ -27,6 +27,7 @@ public class User implements Serializable {
 	//эл. почта
 	private String email;
 
+	// Список достижений
 	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<UserAchievement> achievements = new ArrayList<UserAchievement>();
 
