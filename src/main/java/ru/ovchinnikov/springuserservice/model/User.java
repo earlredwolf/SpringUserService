@@ -1,7 +1,5 @@
 package ru.ovchinnikov.springuserservice.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,7 +11,7 @@ import java.util.List;
  * Модель пользователя
  */
 @Entity
-@XmlRootElement(name="user")
+@XmlRootElement(name = "user")
 public class User implements Serializable {
 	//Код пользователя
 	@Id
@@ -21,6 +19,7 @@ public class User implements Serializable {
 	@XmlElement
 	private Long id;
 	// Ник
+
 	private String nick;
 	//Логин
 	private String login;

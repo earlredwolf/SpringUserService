@@ -1,6 +1,5 @@
 package ru.ovchinnikov.springuserservice.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,6 +21,7 @@ public class UserAchievement implements Serializable {
 	private Long id;
 
 	// Достижение
+
 	private String achievement;
 
 	public UserAchievement () {
