@@ -1,1 +1,44 @@
-This file was created by IntelliJ IDEA 11.1.4 for binding GitHub repository
+ RESTfull api для работы с пользователя.
+
+ Модель данных :
+ Сущность User (Пользователь)
+ Код уникальный Long id
+ Ник String nick
+ Логин String login
+ эл. почта String email
+ Массив достижений  List<UserAchievement> achievements  связь один-ко-многим
+ Сущность UserAchievement (Достижение пользователя)
+ Код в БД Long id
+ Достижение String achievement
+
+ Особенности:
+ spring-data-jpa надстройка на hibernate и jpa пользоляет в интерфейсе сразу определить запросы
+
+ Авторизация реализована через фильтр , токен указываеться в заголовке через Authorization,
+ по умолчанию токен 12345 (curl -H "Authorization:12345" http://localhost:8080/user/id/1.json)
+ В случае если авторизация не прошла возврожаеться код 403
+
+ Тип данных определяется расширением json или xml
+
+ Все методы вместе с данным возвращают статус
+  * HttpStatus.OK если все прошло хорошо и небыло ошибок
+  * HttpStatus.NO_CONTENT если нечего не нашлось
+  * HttpStatus.BAD_REQUEST если параметры null
+
+
+ Интерфейс :
+
+    * /user/id/{id}.{xml|json} получение пользователя по id (curl -H "Authorization:12345" http://localhost:8080/user/id/1.json)
+    * /user/nick/{nick}.{xml|json} получение списка пользователей по nick  (curl -H "Authorization:12345" http://localhost:8080/user/id/1.json)
+    * /user/nick/{login}.{xml|json} получение списка пользователей по login
+    * /user/nick/{email}.{xml|json} получение списка пользователей по email
+    * /user/update обновление пользователя (изменение ника, email) update указывает какой поле обновить (nick , email), id Пользователя, value Новое значение (  curl -H "Authorization:12345" -s -d "update=nick&id=1&achievement=test" http://localhost:8080/user/update )
+    * /user/achievement/add установка достижения id Пользователя,  achievement достижение ( тип String )  (  curl -H "Authorization:12345" -s -d "id=1&achievement=test" http://localhost:8080/user/achievement/add )
+
+
+  В maven два профиля development и prodaction по умолчанию включен development
+
+ Запуск :
+ mvn jetty:run-war - запускает локальный сервер jetty с построением war
+ Для создания в продакшен
+ mvn -P production package

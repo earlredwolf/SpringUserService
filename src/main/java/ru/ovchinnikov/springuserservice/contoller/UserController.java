@@ -1,7 +1,6 @@
 package ru.ovchinnikov.springuserservice.contoller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,13 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.ovchinnikov.springuserservice.model.User;
 import ru.ovchinnikov.springuserservice.model.UserAchievement;
 import ru.ovchinnikov.springuserservice.repository.UserRepository;
-import ru.ovchinnikov.springuserservice.service.Security;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 /**
  * Контроллер api доступа к информации о пользователе
@@ -30,9 +26,6 @@ public class UserController {
 
 	@Autowired
 	UserRepository service;
-
-	@Autowired
-	Security security;
 
 	/**
 	 * получение пользователя по id
@@ -206,7 +199,7 @@ public class UserController {
 
 	/**
 	 * Метод для создание пользователя т/к/ база пустая
-	 * @return
+	 * @return все ок
 	 */
 	@RequestMapping(value = "/user/add")
 	public ResponseEntity addUser() {
