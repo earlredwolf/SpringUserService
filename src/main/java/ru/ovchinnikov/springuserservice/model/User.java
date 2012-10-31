@@ -82,7 +82,7 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("User");
 		sb.append("{id=").append(id);
 		sb.append(", nick='").append(nick).append('\'');

@@ -18,8 +18,6 @@ import java.util.List;
 @ContextConfiguration(locations={"classpath:/META-INF/config.xml"})
 public class UserRepositoryTest {
 
-	Logger log = LoggerFactory.getLogger(UserRepositoryTest.class);
-
 	@Autowired
 	UserRepository repository;
 
@@ -31,11 +29,6 @@ public class UserRepositoryTest {
 		repository.saveAndFlush(new User("dee1","ee1","ww@ww.ww1"));
 		repository.saveAndFlush(new User("dee2","ee2","ww@ww.ww2"));
 		repository.saveAndFlush(new User("dee3","ee3","ww@ww.ww3"));
-	}
-
-	@After
-	public void tearDown() {
-		//em.getTransaction().rollback();
 	}
 
 	@Test
