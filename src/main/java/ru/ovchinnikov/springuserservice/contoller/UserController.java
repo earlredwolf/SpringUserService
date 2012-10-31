@@ -10,14 +10,8 @@ import ru.ovchinnikov.springuserservice.model.UserAchievement;
 import ru.ovchinnikov.springuserservice.model.UserList;
 import ru.ovchinnikov.springuserservice.repository.UserRepository;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Контроллер api доступа к информации о пользователе
@@ -33,7 +27,17 @@ public class UserController {
 	@Autowired
 	UserRepository service;
 
-	Logger log = Logger.getLogger("asdasd");
+
+	/**
+	 * получение пользователя по id
+	 * @param id id Пользователя
+	 * @return Сущность пользователь
+	 */
+	private ResponseEntity<User> getUser(Long id) {
+		User u = service.findById(id);
+		if (u != null) return new ResponseEntity<User>(u, HttpStatus.OK);
+		else return new ResponseEntity<User>(u, HttpStatus.NO_CONTENT);
+	}
 
 	/**
 	 * получение пользователя по id
@@ -43,9 +47,7 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.GET, value = "/user/id/{id}/xml",produces = "application/xml")
 	@ResponseBody
 	public ResponseEntity<User> getUserXML(@PathVariable Long id) {
-		User u = service.findById(id);
-		if (u != null) return new ResponseEntity<User>(u, HttpStatus.OK);
-		else return new ResponseEntity<User>(u, HttpStatus.NO_CONTENT);
+		return getUser(id);
 	}
 
 	/**
@@ -56,120 +58,119 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.GET, value = "/user/id/{id}/json",produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<User> getUserJSON(@PathVariable Long id) {
-		User u = service.findById(id);
-		if (u != null) return new ResponseEntity<User>(u, HttpStatus.OK);
-		else return new ResponseEntity<User>(u, HttpStatus.NO_CONTENT);
+		return getUser(id);
 	}
 
 
+
 	/**
-	 * получение списка пользователей по nick
+	 * получение пользователя по nick
 	 * @param nick nick Пользователя
-	 * @return Массив сущностей пользователь в формате xml
+	 * @return Список пользователей
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/user/nick/{nick}/xml",produces = "application/xml")
-	public @ResponseBody ResponseEntity<UserList> getUserNickXML(@PathVariable String nick) throws JAXBException {
+	private ResponseEntity<UserList> getUserNick(String nick) {
 		if (nick != null) {
 			List<User> result = service.findByNick(nick);
-			UserList userlist = new UserList();
-			userlist.userlist = result;
-			if (result != null && result.size() > 0) return new ResponseEntity<UserList>(userlist, HttpStatus.OK);
+			if (result != null && result.size() > 0) return new ResponseEntity<UserList>(new UserList(result), HttpStatus.OK);
 			else return new ResponseEntity<UserList>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<UserList>(HttpStatus.BAD_REQUEST);
 	}
 
+
 	/**
-	 * получение списка пользователей по nick
+	 * получение пользователя по nick
 	 * @param nick nick Пользователя
-	 * @return Массив сущностей пользователь в формате json
+	 * @return Список пользователей в формате xml
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/user/nick/{nick}/xml",produces = "application/xml")
+	public @ResponseBody ResponseEntity<UserList> getUserNickXML(@PathVariable String nick) {
+		return getUserNick(nick);
+	}
+
+	/**
+	 * получение пользователя по nick
+	 * @param nick nick Пользователя
+	 * @return Сущность пользователь в формате xml
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/user/nick/{nick}/json",produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<UserList> getUserNickJSON(@PathVariable String nick) {
-		if (nick != null) {
-			List<User> result = service.findByNick(nick);
-			UserList userlist = new UserList();
-			userlist.userlist = result;
-			if (result != null && result.size() > 0) return new ResponseEntity<UserList>(userlist, HttpStatus.OK);
+		return getUserNick(nick);
+	}
+
+
+	/**
+	 * получение пользователя по login
+	 * @param login login Пользователя
+	 * @return Список пользователей
+	 */
+	private ResponseEntity<UserList> getUserLogin(String login) {
+		if (login != null) {
+			List<User> result = service.findByLogin(login);
+			if (result != null && result.size() > 0) return new ResponseEntity<UserList>(new UserList(result), HttpStatus.OK);
 			else return new ResponseEntity<UserList>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<UserList>(HttpStatus.BAD_REQUEST);
 	}
 
 	/**
-	 * получение списка пользователей по login
+	 * получение пользователя по login
 	 * @param login login Пользователя
-	 * @return Массив сущностей пользователь в формате xml
+	 * @return Список пользователей в формате xml
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/user/login/{login}/xml",produces = "application/xml")
 	@ResponseBody
 	public ResponseEntity<UserList> getUserLoginXML(@PathVariable String login) {
-		if (login != null) {
-			List<User> result = service.findByLogin(login);
-			UserList userlist = new UserList();
-			userlist.userlist = result;
-			if (result != null && result.size() > 0) return new ResponseEntity<UserList>(userlist, HttpStatus.OK);
-			else return new ResponseEntity<UserList>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<UserList>(HttpStatus.BAD_REQUEST);
+		return getUserLogin(login);
 	}
 
 	/**
 	 * получение списка пользователей по login
 	 * @param login login Пользователя
-	 * @return Массив сущностей пользователь в формате json
+	 * @return Список пользователей в формате json
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/user/login/{login}/json",produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<UserList> getUserLoginJSON(@PathVariable String login) {
-		if (login != null) {
-			List<User> result = service.findByLogin(login);
-			UserList userlist = new UserList();
-			userlist.userlist = result;
-			if (result != null && result.size() > 0) return new ResponseEntity<UserList>(userlist, HttpStatus.OK);
-			else return new ResponseEntity<UserList>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<UserList>(HttpStatus.BAD_REQUEST);
+		return getUserLogin(login);
 	}
 
 
 	/**
 	 * получение списка пользователей по email
 	 * @param email email Пользователя
-	 * @return Массив сущностей пользователь в формате xml
+	 * @return Список пользователей
+	 */
+	private ResponseEntity<UserList> getUserEmail(String email) {
+		if (email != null) {
+			List<User> result = service.findByEmail(email);
+			if (result != null && result.size() > 0) return new ResponseEntity<UserList>(new UserList(result), HttpStatus.OK);
+			else return new ResponseEntity<UserList>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<UserList>(HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * получение списка пользователей по email
+	 * @param email email Пользователя
+	 * @return Список пользователей  в формате xml
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/user/email/{email}/xml",produces = "application/xml")
 	@ResponseBody
 	public ResponseEntity<UserList> getUserEmailXML(@PathVariable String email) {
-		if (email != null) {
-			List<User> result = service.findByEmail(email);
-			System.out.println(email);
-			System.out.println(result);
-			UserList userlist = new UserList();
-			userlist.userlist = result;
-			if (result != null && result.size() > 0) return new ResponseEntity<UserList>(userlist, HttpStatus.OK);
-			else return new ResponseEntity<UserList>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<UserList>(HttpStatus.BAD_REQUEST);
+		return getUserEmail(email);
 	}
 
 	/**
 	 * получение списка пользователей по email
 	 * @param email email Пользователя
-	 * @return Массив сущностей пользователь в формате json
+	 * @return Список пользователей в формате json
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/user/email/{email}/json",produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<UserList> getUserEmailJSON(@PathVariable String email) {
-		if (email != null) {
-			List<User> result = service.findByEmail(email);
-			UserList userlist = new UserList();
-			userlist.userlist = result;
-			if (result != null && result.size() > 0) return new ResponseEntity<UserList>(userlist, HttpStatus.OK);
-			else return new ResponseEntity<UserList>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<UserList>(HttpStatus.BAD_REQUEST);
+		return getUserEmail(email);
 	}
 
 
@@ -224,7 +225,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/user/add")
 	public ResponseEntity addUser() {
-		User u = new User(UUID.randomUUID().toString(), "asdasd", "earl.redwolf@gmail.com");
+		User u = new User(UUID.randomUUID().toString(), "asdasd", "q@w.r");
 		u.getAchievements().add(new UserAchievement(UUID.randomUUID().toString()));
 		service.saveAndFlush(u);
 		return new ResponseEntity(HttpStatus.OK);
