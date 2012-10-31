@@ -9,7 +9,9 @@ import java.util.List;
 @XmlRootElement(name = "root")
 public class UserList {
 
+
 	public List<User> userlist;
+
 
 	public UserList() {
 	}
